@@ -29,13 +29,13 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    min-width: 320px; 
+    width: 320px; 
     flex: 1;
   }
 
   .current-weather {
     position: absolute;
-    width: 280px;
+    width: 310px;
     height: 340px;
     display: flex;
     border-radius: 20px;
