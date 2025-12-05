@@ -1,12 +1,14 @@
 import "./App.scss";
 import { Icon } from "@iconify/react";
-import ForecastItem from "./components/DayForecastItem";
+import ForecastItem from "./components/DayForecastCard";
 import ForecastInfoItem from "./components/ForecastInfoItem";
 import IconButton from "./components/IconButton";
 import Modal from "./components/Modal";
 import { useEffect, useState } from "react";
 import { getWeatherData } from "./assets/api/apiController";
+import InputField from "./components/InputField";
 import { getDayOfWeek, getWeatherDetails, toDateString } from "./utils";
+import { getCityFromCoordinates } from "./assets/api/apiController";
 
 const App = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -14,12 +16,27 @@ const App = () => {
   const [loading, setLoading] = useState(true);
   const [currentDayIndex, setCurrentDayIndex] = useState(0);
   const [error, setError] = useState(null);
+  const [coordinates, setCoordinates] = useState({});
+
+  const [currentLocation, setCurrentLocation] = useState({
+    latitude: 52.52,
+    longitude: 13.419998,
+  });
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await getWeatherData(43.468, -1.5536);
-        setData(response);
+        const response = await getWeatherData(
+          currentLocation.latitude,
+          currentLocation.longitude
+        );
+        setData({
+          ...response,
+          city: await getCityFromCoordinates(
+            currentLocation.latitude,
+            currentLocation.longitude
+          ),
+        });
       } catch (error) {
         setError("An error occurred while fetching data");
       } finally {
@@ -27,7 +44,7 @@ const App = () => {
       }
     };
     fetchData();
-  }, []);
+  }, [currentLocation]);
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -37,7 +54,26 @@ const App = () => {
     setIsModalOpen(false);
   };
 
-  if (loading) return <div>Loading...</div>;
+  const handleLocationChange = () => {
+    setCurrentLocation({
+      latitude: coordinates.latitude,
+      longitude: coordinates.longitude,
+    });
+    closeModal();
+  };
+
+  if (loading)
+    return (
+      <div className="loading">
+        <p>Loading</p>
+        <Icon
+          icon="material-symbols:rotate-right"
+          className="loader"
+          width="24"
+          height="24"
+        />
+      </div>
+    );
   if (error) return <div>{error}</div>;
 
   return (
@@ -53,14 +89,25 @@ const App = () => {
             </p>
             <p className="location">
               <Icon icon={"solar:map-point-linear"} width="20" height="20" />
-              TO CHANGE
+              {data.city}
             </p>
           </div>
 
           <div className="weather">
-            <Icon icon={getWeatherDetails(data.daily.weather_code[currentDayIndex]).icon} width="50" height="50" />
+            <Icon
+              icon={
+                getWeatherDetails(data.daily.weather_code[currentDayIndex]).icon
+              }
+              width="50"
+              height="50"
+            />
             <p className="temperature">{`${data.daily.temperature_2m_min[currentDayIndex]} - ${data.daily.temperature_2m_max[currentDayIndex]}`}</p>
-            <p className="weather-condition">{getWeatherDetails(data.daily.weather_code[currentDayIndex]).title}</p>
+            <p className="weather-condition">
+              {
+                getWeatherDetails(data.daily.weather_code[currentDayIndex])
+                  .title
+              }
+            </p>
           </div>
         </div>
       </div>
@@ -100,17 +147,34 @@ const App = () => {
         <IconButton
           onClick={openModal}
           icon={"solar:map-point-linear"}
-          label={"Change location"}
-          className={"change-location-btn"}
+          label={"Change coordinates"}
         />
       </div>
       <Modal isOpen={isModalOpen} onClose={closeModal}>
-        TO CHANGE
+        <div class="location-form">
+          <InputField
+            label="Latitude"
+            id="latitude"
+            onChange={(e) =>
+              setCoordinates({ ...coordinates, latitude: e.target.value })
+            }
+          />
+          <InputField
+            label="Longitude"
+            id="longitude"
+            onChange={(e) =>
+              setCoordinates({ ...coordinates, longitude: e.target.value })
+            }
+          />
+          <IconButton
+            icon={"material-symbols:search-rounded"}
+            label={"Search"}
+            onClick={() => handleLocationChange()}
+          />
+        </div>
       </Modal>
     </div>
   );
 };
 
 export default App;
-
-// https://api.open-meteo.com/v1/forecast?latitude=43.4680&longitude=-1.5536&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max,relative_humidity_2m_max,windspeed_10m_max&timezone=Europe/Paris
