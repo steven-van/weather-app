@@ -2,14 +2,15 @@
 
 #root {
   max-width: 1280px;
-  font-family: "Montserrat", sans-serif;
-  color: white;
   margin: 0 auto;
   padding: 2rem;
 }
 
 body {
   margin: 0;
+  font-family: "Montserrat", sans-serif;
+  color: white;
+
   display: flex;
   place-items: center;
   min-width: 320px;
@@ -29,7 +30,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 320px; 
+    width: 320px;
     flex: 1;
   }
 
@@ -114,7 +115,8 @@ body {
           font-weight: bold;
         }
 
-        &:hover, &.active {
+        &:hover,
+        &.active {
           background-color: #ffffff;
           border-radius: 10px;
           color: #000000;
@@ -125,7 +127,6 @@ body {
           padding: 0;
           font-size: 12px;
         }
-
       }
     }
 
@@ -143,9 +144,7 @@ body {
       background: linear-gradient(to right, #90d9e0 0%, #5460e6 100%);
     }
   }
-
 }
-
 
 .modal-overlay {
   position: fixed;
