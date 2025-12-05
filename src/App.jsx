@@ -6,7 +6,7 @@ import IconButton from "./components/IconButton";
 import Modal from "./components/Modal";
 import { useEffect, useState } from "react";
 import { getWeatherData } from "./assets/api/apiController";
-import { getDayOfWeek } from "./utils";
+import { getDayOfWeek, getWeatherDetails, toDateString } from "./utils";
 
 const App = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -49,22 +49,18 @@ const App = () => {
               {getDayOfWeek(data.daily.time[currentDayIndex])}
             </p>
             <p className="date">
-              {new Date(data.daily.time[currentDayIndex]).toLocaleDateString("en-GB", {
-                day: "2-digit",
-                month: "long",
-                year: "numeric",
-              })}
+              {toDateString(data.daily.time[currentDayIndex])}
             </p>
             <p className="location">
               <Icon icon={"solar:map-point-linear"} width="20" height="20" />
-              Biarritz, FR
+              TO CHANGE
             </p>
           </div>
 
           <div className="weather">
-            <Icon icon="solar:sun-2-line-duotone" width="50" height="50" />
+            <Icon icon={getWeatherDetails(data.daily.weather_code[currentDayIndex]).icon} width="50" height="50" />
             <p className="temperature">{`${data.daily.temperature_2m_min[currentDayIndex]} - ${data.daily.temperature_2m_max[currentDayIndex]}`}</p>
-            <p className="weather-condition">Sunny</p>
+            <p className="weather-condition">{getWeatherDetails(data.daily.weather_code[currentDayIndex]).title}</p>
           </div>
         </div>
       </div>
@@ -87,6 +83,7 @@ const App = () => {
         <div className="week-forecast">
           {[...Array(4)].map((_, i) => (
             <ForecastItem
+              icon={getWeatherDetails(data.daily.weather_code[i]).icon}
               onClick={() => setCurrentDayIndex(i)}
               key={i}
               isCurrentDate={i === currentDayIndex}
@@ -108,7 +105,7 @@ const App = () => {
         />
       </div>
       <Modal isOpen={isModalOpen} onClose={closeModal}>
-        Test
+        TO CHANGE
       </Modal>
     </div>
   );
