@@ -25,7 +25,7 @@ export const getWeatherDetails = (weatherCode) => {
 const weatherDetails = {
     0: { title: "Sunny", icon: "material-symbols:wb-sunny-outline-rounded" },
     1: { title: "Mostly Sunny", icon: "material-symbols:wb-sunny-outline-rounded" },
-    2: { title: "Partly Cloudy", icon: "partly-cloudy-day-outline-rounded" },
+    2: { title: "Partly Cloudy", icon: "material-symbols:partly-cloudy-day-outline-rounded" },
     3: { title: "Cloudy", icon: "material-symbols:cloud-outline" },
     45: { title: "Foggy", icon: "material-symbols:foggy-outline" },
     48: { title: "Rime Fog", icon: "material-symbols:foggy-outline" },
