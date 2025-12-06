@@ -22,44 +22,42 @@ export const toDateString = (date) => {
 };
 
 export const getWeatherDetails = (weatherCode) => {
-  const weatherDetails = {
-    0: { title: "Sunny", icon: "mdi:sun" },
-    1: { title: "Mostly Sunny", icon: "mdi:sun" },
-    2: { title: "Partly Cloudy", icon: "mdi:cloud-sun" },
-    3: { title: "Cloudy", icon: "mdi:cloud" },
-    45: { title: "Foggy", icon: "mdi:weather-fog" },
-    48: { title: "Rime Fog", icon: "mdi:weather-fog" },
-    51: { title: "Light Drizzle", icon: "mdi:weather-rainy" },
-    53: { title: "Drizzle", icon: "mdi:weather-rainy" },
-    55: { title: "Heavy Drizzle", icon: "mdi:weather-rainy" },
-    56: { title: "Light Freezing Drizzle", icon: "mdi:snowflake" },
-    57: { title: "Freezing Drizzle", icon: "mdi:snowflake" },
-    61: { title: "Light Rain", icon: "mdi:weather-rainy" },
-    63: { title: "Rain", icon: "mdi:weather-rainy" },
-    65: { title: "Heavy Rain", icon: "mdi:weather-rainy" },
-    66: { title: "Light Freezing Rain", icon: "mdi:snowflake" },
-    67: { title: "Freezing Rain", icon: "mdi:snowflake" },
-    71: { title: "Light Snow", icon: "mdi:snowflake" },
-    73: { title: "Snow", icon: "mdi:snowflake" },
-    75: { title: "Heavy Snow", icon: "mdi:snowflake" },
-    77: { title: "Snow Grains", icon: "mdi:snowflake" },
-    80: { title: "Light Showers", icon: "mdi:weather-pouring" },
-    81: { title: "Showers", icon: "mdi:weather-pouring" },
-    82: { title: "Heavy Showers", icon: "mdi:weather-pouring" },
-    85: { title: "Light Snow Showers", icon: "mdi:snowflake" },
-    86: { title: "Snow Showers", icon: "mdi:snowflake" },
-    95: { title: "Thunderstorms", icon: "mdi:weather-lightning" },
-    96: {
-      title: "Thunderstorm with Light Hail",
-      icon: "mdi:weather-lightning",
-    },
-    99: { title: "Thunderstorm with Hail", icon: "mdi:weather-lightning" },
-  };
+const weatherDetails = {
+    0: { title: "Sunny", icon: "material-symbols:wb-sunny-outline-rounded" },
+    1: { title: "Mostly Sunny", icon: "material-symbols:wb-sunny-outline-rounded" },
+    2: { title: "Partly Cloudy", icon: "partly-cloudy-day-outline-rounded" },
+    3: { title: "Cloudy", icon: "material-symbols:cloud-outline" },
+    45: { title: "Foggy", icon: "material-symbols:foggy-outline" },
+    48: { title: "Rime Fog", icon: "material-symbols:foggy-outline" },
+    51: { title: "Light Drizzle", icon: "material-symbols:rainy-outline" },
+    53: { title: "Drizzle", icon: "material-symbols:rainy-outline" },
+    55: { title: "Heavy Drizzle", icon: "material-symbols:rainy-outline" },
+    56: { title: "Light Freezing Drizzle", icon: "material-symbols:snowing-outlined" },
+    57: { title: "Freezing Drizzle", icon: "material-symbols:snowing-outlined" },
+    61: { title: "Light Rain", icon: "material-symbols:rainy-outline" },
+    63: { title: "Rain", icon: "material-symbols:rainy-outline" },
+    65: { title: "Heavy Rain", icon: "material-symbols:rainy-outline" },
+    66: { title: "Light Freezing Rain", icon: "material-symbols:snowing-outlined" },
+    67: { title: "Freezing Rain", icon: "material-symbols:snowing-outlined" },
+    71: { title: "Light Snow", icon: "material-symbols:rainy-outline" },
+    73: { title: "Snow", icon: "weather-snowy-outline" },
+    75: { title: "Heavy Snow", icon: "weather-snowy-outline" },
+    77: { title: "Snow Grains", icon: "weather-snowy-outline" },
+    80: { title: "Light Showers", icon: "material-symbols:showers-outlined" },
+    81: { title: "Showers", icon: "material-symbols:showers-outlined" },
+    82: { title: "Heavy Showers", icon: "material-symbols:showers-outlined" },
+    85: { title: "Light Snow Showers", icon: "weather-snowy-outline" },
+    86: { title: "Snow Showers", icon: "weather-snowy-outline" },
+    95: { title: "Thunderstorms", icon: "material-symbols:thunderstorm-outline-rounded" },
+    96: { title: "Thunderstorm with Light Hail", icon: "material-symbols:thunderstorm-outline-rounded" },
+    99: { title: "Thunderstorm with Hail", icon: "material-symbols:thunderstorm-outline-rounded" }
+};
+
 
   return (
     weatherDetails[weatherCode] || {
       title: "Unknown Weather",
-      icon: "mdi:question-mark-rounded",
+      icon: "mdi:help-circle",
     }
   );
 };
