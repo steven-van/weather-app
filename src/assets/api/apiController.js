@@ -11,14 +11,14 @@ export const getWeatherData = async (latitude, longitude) => {
   }
 };
 
-export const getCityFromCoordinates = async (lat, lon) => {
+export const getLocationFromCoordinates = async (lat, lon) => {
   const url = `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&accept-language=en&format=json`;
 
   try {
     const response = await fetch(url);
     const data = await response.json();
-    const city = `${(data.address.city || data.address.town || data.address.village)}, ${data.address.country}`;
-    return city;
+    const location = `${(data.address.city || data.address.town || data.address.village)}, ${data.address.country}`;
+    return location;
   } catch (error) {
     console.error("Error:", error);
     alert("Error fetching data");

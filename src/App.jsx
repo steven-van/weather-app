@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import { getWeatherData } from "./assets/api/apiController";
 import InputField from "./components/InputField";
 import { getDayOfWeek, getWeatherDetails, toDateString } from "./utils";
-import { getCityFromCoordinates } from "./assets/api/apiController";
+import { getLocationFromCoordinates } from "./assets/api/apiController";
 
 const App = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -18,33 +18,19 @@ const App = () => {
   const [error, setError] = useState(null);
   const [coordinates, setCoordinates] = useState({});
 
-  const [currentLocation, setCurrentLocation] = useState({
-    latitude: 52.52,
-    longitude: 13.419998,
-  });
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await getWeatherData(
-          currentLocation.latitude,
-          currentLocation.longitude
-        );
-        setData({
-          ...response,
-          city: await getCityFromCoordinates(
-            currentLocation.latitude,
-            currentLocation.longitude
-          ),
-        });
-      } catch (error) {
-        setError("An error occurred while fetching data");
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchData();
-  }, [currentLocation]);
+  const fetchData = async (lat, long) => {
+    try {
+      const response = await getWeatherData(lat, long);
+      setData({
+        ...response,
+        location: await getLocationFromCoordinates(lat, long),
+      });
+    } catch (error) {
+      setError("An error occurred while fetching data");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -54,26 +40,44 @@ const App = () => {
     setIsModalOpen(false);
   };
 
-  const handleLocationChange = () => {
-    setCurrentLocation({
-      latitude: coordinates.latitude,
-      longitude: coordinates.longitude,
-    });
-    closeModal();
-  };
-
   if (loading)
     return (
-      <div className="loading">
-        <p>Loading</p>
-        <Icon
-          icon="material-symbols:rotate-right"
-          className="loader"
-          width="24"
-          height="24"
-        />
-      </div>
+      <>
+        <div className="loading">
+          <p>Loading</p>
+          <Icon
+            icon="material-symbols:rotate-right"
+            className="loader"
+            width="24"
+            height="24"
+          />
+        </div>
+        <Modal isOpen={true} onClose={closeModal}>
+          <div className="location-form">
+            <InputField
+              label="Latitude"
+              id="latitude"
+              onChange={(e) =>
+                setCoordinates({ ...coordinates, latitude: e.target.value })
+              }
+            />
+            <InputField
+              label="Longitude"
+              id="longitude"
+              onChange={(e) =>
+                setCoordinates({ ...coordinates, longitude: e.target.value })
+              }
+            />
+            <IconButton
+              icon={"material-symbols:search-rounded"}
+              label={"Search"}
+              onClick={() => fetchData(coordinates.latitude, coordinates.longitude)}
+            />
+          </div>
+        </Modal>
+      </>
     );
+
   if (error) return <div>{error}</div>;
 
   return (
@@ -89,7 +93,7 @@ const App = () => {
             </p>
             <p className="location">
               <Icon icon={"solar:map-point-linear"} width="20" height="20" />
-              {data.city}
+              {data.location}
             </p>
           </div>
 
@@ -147,11 +151,11 @@ const App = () => {
         <IconButton
           onClick={openModal}
           icon={"solar:map-point-linear"}
-          label={"Change coordinates"}
+          label={"Change location"}
         />
       </div>
       <Modal isOpen={isModalOpen} onClose={closeModal}>
-        <div class="location-form">
+        <div className="location-form">
           <InputField
             label="Latitude"
             id="latitude"
@@ -169,7 +173,7 @@ const App = () => {
           <IconButton
             icon={"material-symbols:search-rounded"}
             label={"Search"}
-            onClick={() => handleLocationChange()}
+            onClick={() => fetchData(coordinates.latitude, coordinates.longitude)}
           />
         </div>
       </Modal>
