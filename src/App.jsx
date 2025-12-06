@@ -4,7 +4,7 @@ import ForecastItem from "./components/DayForecastCard";
 import ForecastInfoItem from "./components/ForecastInfoItem";
 import IconButton from "./components/IconButton";
 import Modal from "./components/Modal";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { getWeatherData } from "./assets/api/apiController";
 import InputField from "./components/InputField";
 import { getDayOfWeek, getWeatherDetails, toDateString } from "./utils";
@@ -53,29 +53,36 @@ const App = () => {
             height="24"
           />
         </div>
-        <Modal isOpen={true} onClose={closeModal}>
-          <div className="location-form">
-            <InputField
-              label="Latitude"
-              id="latitude"
-              onChange={(e) =>
-                setCoordinates({ ...coordinates, latitude: e.target.value })
-              }
-            />
-            <InputField
-              label="Longitude"
-              id="longitude"
-              onChange={(e) =>
-                setCoordinates({ ...coordinates, longitude: e.target.value })
-              }
-            />
-            <IconButton
-              icon={"material-symbols:search-rounded"}
-              label={"Search"}
-              onClick={() => fetchData(coordinates.latitude, coordinates.longitude)}
-            />
-          </div>
-        </Modal>
+        <IconButton
+          onClick={openModal}
+          icon={"solar:map-point-linear"}
+          label={"Select location"}
+        />
+              <Modal isOpen={isModalOpen} onClose={closeModal}>
+        <div className="location-form">
+          <InputField
+            label="Latitude"
+            id="latitude"
+            onChange={(e) =>
+              setCoordinates({ ...coordinates, latitude: e.target.value })
+            }
+          />
+          <InputField
+            label="Longitude"
+            id="longitude"
+            onChange={(e) =>
+              setCoordinates({ ...coordinates, longitude: e.target.value })
+            }
+          />
+          <IconButton
+            icon={"material-symbols:search-rounded"}
+            label={"Search"}
+            onClick={() =>
+              fetchData(coordinates.latitude, coordinates.longitude)
+            }
+          />
+        </div>
+      </Modal>
       </>
     );
 
@@ -106,7 +113,7 @@ const App = () => {
               width="50"
               height="50"
             />
-            <p className="temperature">{`${data.daily.temperature_2m_min[currentDayIndex]} - ${data.daily.temperature_2m_max[currentDayIndex]} °C`}</p>
+            <p className="temperature">{`${data.daily.temperature_2m_min[currentDayIndex]} | ${data.daily.temperature_2m_max[currentDayIndex]} °C`}</p>
             <p className="weather-condition">
               {
                 getWeatherDetails(data.daily.weather_code[currentDayIndex])
@@ -174,7 +181,9 @@ const App = () => {
           <IconButton
             icon={"material-symbols:search-rounded"}
             label={"Search"}
-            onClick={() => fetchData(coordinates.latitude, coordinates.longitude)}
+            onClick={() =>
+              fetchData(coordinates.latitude, coordinates.longitude)
+            }
           />
         </div>
       </Modal>

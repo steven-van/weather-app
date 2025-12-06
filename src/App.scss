@@ -208,7 +208,7 @@ body {
   color: #ffffff;
   font-weight: 600;
   border-radius: 10px;
-  padding: 10px 0;
+  padding: 10px;
   align-items: center;
   justify-content: center;
   background: linear-gradient(to right, #90d9e0 0%, #5460e6 100%);
@@ -219,6 +219,7 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  padding-bottom: 10px;
 }
 
 @keyframes rotating {
