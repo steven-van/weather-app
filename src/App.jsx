@@ -25,6 +25,7 @@ const App = () => {
         ...response,
         location: await getLocationFromCoordinates(lat, long),
       });
+      closeModal();
     } catch (error) {
       setError("An error occurred while fetching data");
     } finally {
@@ -105,7 +106,7 @@ const App = () => {
               width="50"
               height="50"
             />
-            <p className="temperature">{`${data.daily.temperature_2m_min[currentDayIndex]} - ${data.daily.temperature_2m_max[currentDayIndex]}`}</p>
+            <p className="temperature">{`${data.daily.temperature_2m_min[currentDayIndex]} - ${data.daily.temperature_2m_max[currentDayIndex]} °C`}</p>
             <p className="weather-condition">
               {
                 getWeatherDetails(data.daily.weather_code[currentDayIndex])
