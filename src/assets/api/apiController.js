@@ -6,8 +6,7 @@ export const getWeatherData = async (latitude, longitude) => {
     const response = await fetch(url);
     return response.json();
   } catch (error) {
-    console.error("Error fetching data:", error.response.data);
-    alert("Error fetching data");
+    throw error;
   }
 };
 
@@ -20,8 +19,7 @@ export const getLocationFromCoordinates = async (lat, lon) => {
     const location = `${(data.address.city || data.address.town || data.address.village)}, ${data.address.country}`;
     return location;
   } catch (error) {
-    console.error("Error:", error);
-    alert("Error fetching data");
+    throw error;
 
   }
 };

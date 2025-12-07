@@ -25,11 +25,12 @@ const App = () => {
         ...response,
         location: await getLocationFromCoordinates(lat, long),
       });
+      setLoading(false);
+      setError(null);
       closeModal();
     } catch (error) {
+      setLoading(true);
       setError("An error occurred while fetching data");
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -58,31 +59,32 @@ const App = () => {
           icon={"solar:map-point-linear"}
           label={"Select location"}
         />
-              <Modal isOpen={isModalOpen} onClose={closeModal}>
-        <div className="location-form">
-          <InputField
-            label="Latitude"
-            id="latitude"
-            onChange={(e) =>
-              setCoordinates({ ...coordinates, latitude: e.target.value })
-            }
-          />
-          <InputField
-            label="Longitude"
-            id="longitude"
-            onChange={(e) =>
-              setCoordinates({ ...coordinates, longitude: e.target.value })
-            }
-          />
-          <IconButton
-            icon={"material-symbols:search-rounded"}
-            label={"Search"}
-            onClick={() =>
-              fetchData(coordinates.latitude, coordinates.longitude)
-            }
-          />
-        </div>
-      </Modal>
+        <Modal isOpen={isModalOpen} onClose={closeModal}>
+          <div className="location-form">
+            <InputField
+              label="Latitude"
+              id="latitude"
+              onChange={(e) =>
+                setCoordinates({ ...coordinates, latitude: e.target.value })
+              }
+            />
+            <InputField
+              label="Longitude"
+              id="longitude"
+              onChange={(e) =>
+                setCoordinates({ ...coordinates, longitude: e.target.value })
+              }
+            />
+            <IconButton
+              icon={"material-symbols:search-rounded"}
+              label={"Search"}
+              onClick={() =>
+                fetchData(coordinates.latitude, coordinates.longitude)
+              }
+            />
+            {error && <p className="error-message">{error}</p>}
+          </div>
+        </Modal>
       </>
     );
 
