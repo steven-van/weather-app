@@ -10,16 +10,14 @@ export const getWeatherData = async (latitude, longitude) => {
   }
 };
 
-export const getLocationFromCoordinates = async (lat, lon) => {
-  const url = `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&accept-language=en&format=json`;
+export const getCoordinatesFromLocation = async (cityName) => {
 
+  const url = `https://geocoding-api.open-meteo.com/v1/search?name=${cityName}`;
   try {
     const response = await fetch(url);
     const data = await response.json();
-    const location = `${(data.address.city || data.address.town || data.address.village)}, ${data.address.country}`;
-    return location;
+    return data.results;
   } catch (error) {
     throw error;
-
   }
 };

@@ -4,11 +4,12 @@ import ForecastItem from "./components/DayForecastCard";
 import ForecastInfoItem from "./components/ForecastInfoItem";
 import IconButton from "./components/IconButton";
 import Modal from "./components/Modal";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { getWeatherData } from "./assets/api/apiController";
 import InputField from "./components/InputField";
 import { getDayOfWeek, getWeatherDetails, toDateString } from "./utils";
-import { getLocationFromCoordinates } from "./assets/api/apiController";
+import { getCoordinatesFromLocation } from "./assets/api/apiController";
+import LocationItem from "./components/LocationItem";
 
 const App = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -16,23 +17,36 @@ const App = () => {
   const [loading, setLoading] = useState(true);
   const [currentDayIndex, setCurrentDayIndex] = useState(0);
   const [error, setError] = useState(null);
-  const [coordinates, setCoordinates] = useState({});
-
-  const fetchData = async (lat, long) => {
-    try {
-      const response = await getWeatherData(lat, long);
-      setData({
-        ...response,
-        location: await getLocationFromCoordinates(lat, long),
-      });
-      setLoading(false);
-      setError(null);
-      closeModal();
-    } catch (error) {
-      setLoading(true);
-      setError("An error occurred while fetching data");
+  const [location, setLocation] = useState({});
+  const [locationData, setLocationData] = useState([]);
+  const [selectedLocation, setSelectedLocation] = useState({});
+  const fetchWeatherData = async (lat, long) => {
+    if (lat && long) {
+      try {
+        const response = await getWeatherData(lat, long);
+        setData(response);
+        setLoading(false);
+        setError(null);
+        closeModal();
+      } catch (error) {
+        setLoading(true);
+        setError("An error occurred while fetching data");
+      }
     }
   };
+
+  useEffect(() => {
+    const searchLocation = setTimeout(async () => {
+      try {
+        const response = await getCoordinatesFromLocation(location);
+        setLocationData(response);
+      } catch (error) {
+        alert("Error");
+      }
+    }, 1000);
+
+    return () => clearTimeout(searchLocation);
+  }, [location]);
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -62,24 +76,36 @@ const App = () => {
         <Modal isOpen={isModalOpen} onClose={closeModal}>
           <div className="location-form">
             <InputField
-              label="Latitude"
-              id="latitude"
-              onChange={(e) =>
-                setCoordinates({ ...coordinates, latitude: e.target.value })
-              }
+              label="Location"
+              id="location"
+              onChange={(e) => {
+                setLocation(e.target.value);
+              }}
             />
-            <InputField
-              label="Longitude"
-              id="longitude"
-              onChange={(e) =>
-                setCoordinates({ ...coordinates, longitude: e.target.value })
-              }
-            />
+
+            {locationData && locationData.length > 0 && (
+              <ul role="listbox" className="location-list-container">
+                {locationData.map((location) => {
+                  return (
+                    <li>
+                      <LocationItem
+                        location={location}
+                        isSelected={location === selectedLocation}
+                        onClick={() => setSelectedLocation(location)}
+                      />
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
             <IconButton
               icon={"material-symbols:search-rounded"}
               label={"Search"}
               onClick={() =>
-                fetchData(coordinates.latitude, coordinates.longitude)
+                fetchWeatherData(
+                  selectedLocation.latitude,
+                  selectedLocation.longitude
+                )
               }
             />
             {error && <p className="error-message">{error}</p>}
@@ -103,7 +129,7 @@ const App = () => {
             </p>
             <p className="location">
               <Icon icon={"solar:map-point-linear"} width="20" height="20" />
-              {data.location}
+              {selectedLocation.name}, {selectedLocation.country}
             </p>
           </div>
 
@@ -141,22 +167,22 @@ const App = () => {
             value={`${data.daily.wind_speed_10m_mean[currentDayIndex]} ${data.daily_units.wind_speed_10m_mean}`}
           />
         </div>
-        <div className="week-forecast">
+        <ul className="week-forecast">
           {[...Array(4)].map((_, i) => (
             <ForecastItem
+              key={i}
               icon={getWeatherDetails(data.daily.weather_code[i]).icon}
               onClick={() => setCurrentDayIndex(i)}
-              key={i}
               isCurrentDate={i === currentDayIndex}
               day={getDayOfWeek(data.daily.time[i])}
-              temperature={`${Math.round(
+              temperature={Math.round(
                 (data.daily.temperature_2m_min[i] +
                   data.daily.temperature_2m_max[i]) /
                   2
-              )}`}
+              )}
             />
           ))}
-        </div>
+        </ul>
 
         <IconButton
           onClick={openModal}
@@ -167,24 +193,35 @@ const App = () => {
       <Modal isOpen={isModalOpen} onClose={closeModal}>
         <div className="location-form">
           <InputField
-            label="Latitude"
-            id="latitude"
-            onChange={(e) =>
-              setCoordinates({ ...coordinates, latitude: e.target.value })
-            }
+            label="Location"
+            id="location"
+            onChange={(e) => {
+              setLocation(e.target.value);
+            }}
           />
-          <InputField
-            label="Longitude"
-            id="longitude"
-            onChange={(e) =>
-              setCoordinates({ ...coordinates, longitude: e.target.value })
-            }
-          />
+          {locationData && locationData.length > 0 && (
+            <ul role="listbox" className="location-list-container">
+              {locationData.map((location) => {
+                return (
+                  <li>
+                    <LocationItem
+                      location={location}
+                      isSelected={location === selectedLocation}
+                      onClick={() => setSelectedLocation(location)}
+                    />
+                  </li>
+                );
+              })}
+            </ul>
+          )}
           <IconButton
             icon={"material-symbols:search-rounded"}
             label={"Search"}
             onClick={() =>
-              fetchData(coordinates.latitude, coordinates.longitude)
+              fetchWeatherData(
+                selectedLocation.latitude,
+                selectedLocation.longitude
+              )
             }
           />
         </div>
