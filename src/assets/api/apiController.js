@@ -10,7 +10,7 @@ export const getWeatherData = async (latitude, longitude) => {
   }
 };
 
-export const getCoordinatesFromLocation = async (cityName) => {
+export const getDataFromLocation = async (cityName) => {
 
   const url = `https://geocoding-api.open-meteo.com/v1/search?name=${cityName}`;
   try {

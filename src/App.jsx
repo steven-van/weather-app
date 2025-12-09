@@ -89,6 +89,7 @@ const App = () => {
                   return (
                     <li>
                       <LocationItem
+                        key={location.id}
                         location={location}
                         isSelected={location === selectedLocation}
                         onClick={() => setSelectedLocation(location)}
@@ -170,7 +171,7 @@ const App = () => {
         <ul className="week-forecast">
           {[...Array(4)].map((_, i) => (
             <ForecastItem
-              key={i}
+              key={weatherData.daily.time[i]}
               icon={getWeatherDetails(weatherData.daily.weather_code[i]).icon}
               onClick={() => setCurrentDayIndex(i)}
               isCurrentDate={i === currentDayIndex}
