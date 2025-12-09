@@ -8,16 +8,16 @@ import { useEffect, useState } from "react";
 import { getWeatherData } from "./assets/api/apiController";
 import InputField from "./components/InputField";
 import { getDayOfWeek, getWeatherDetails, toDateString } from "./utils";
-import { getCoordinatesFromLocation } from "./assets/api/apiController";
+import { getDataFromLocation } from "./assets/api/apiController";
 import LocationItem from "./components/LocationItem";
 
 const App = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [data, setData] = useState({});
+  const [weatherData, setData] = useState({});
   const [loading, setLoading] = useState(true);
   const [currentDayIndex, setCurrentDayIndex] = useState(0);
   const [error, setError] = useState(null);
-  const [location, setLocation] = useState({});
+  const [searchLocation, setSearchLocation] = useState({});
   const [locationData, setLocationData] = useState([]);
   const [selectedLocation, setSelectedLocation] = useState({});
   const fetchWeatherData = async (lat, long) => {
@@ -36,17 +36,17 @@ const App = () => {
   };
 
   useEffect(() => {
-    const searchLocation = setTimeout(async () => {
+    const handleSearchLocation = setTimeout(async () => {
       try {
-        const response = await getCoordinatesFromLocation(location);
+        const response = await getDataFromLocation(searchLocation);
         setLocationData(response);
       } catch (error) {
-        alert("Error");
+        // TO DO
       }
     }, 1000);
 
-    return () => clearTimeout(searchLocation);
-  }, [location]);
+    return () => clearTimeout(handleSearchLocation);
+  }, [searchLocation]);
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -79,7 +79,7 @@ const App = () => {
               label="Location"
               id="location"
               onChange={(e) => {
-                setLocation(e.target.value);
+                setSearchLocation(e.target.value);
               }}
             />
 
@@ -122,10 +122,10 @@ const App = () => {
         <div className="current-weather">
           <div>
             <p className="day">
-              {getDayOfWeek(data.daily.time[currentDayIndex])}
+              {getDayOfWeek(weatherData.daily.time[currentDayIndex])}
             </p>
             <p className="date">
-              {toDateString(data.daily.time[currentDayIndex])}
+              {toDateString(weatherData.daily.time[currentDayIndex])}
             </p>
             <p className="location">
               <Icon icon={"solar:map-point-linear"} width="20" height="20" />
@@ -136,15 +136,15 @@ const App = () => {
           <div className="weather">
             <Icon
               icon={
-                getWeatherDetails(data.daily.weather_code[currentDayIndex]).icon
+                getWeatherDetails(weatherData.daily.weather_code[currentDayIndex]).icon
               }
               width="50"
               height="50"
             />
-            <p className="temperature">{`${data.daily.temperature_2m_min[currentDayIndex]} | ${data.daily.temperature_2m_max[currentDayIndex]} °C`}</p>
+            <p className="temperature">{`${weatherData.daily.temperature_2m_min[currentDayIndex]} | ${weatherData.daily.temperature_2m_max[currentDayIndex]} °C`}</p>
             <p className="weather-condition">
               {
-                getWeatherDetails(data.daily.weather_code[currentDayIndex])
+                getWeatherDetails(weatherData.daily.weather_code[currentDayIndex])
                   .title
               }
             </p>
@@ -156,28 +156,28 @@ const App = () => {
         <div className="current-forecast">
           <ForecastInfoItem
             label={"Precipitation"}
-            value={`${data.daily.precipitation_probability_mean[currentDayIndex]} ${data.daily_units.precipitation_probability_mean}`}
+            value={`${weatherData.daily.precipitation_probability_mean[currentDayIndex]} ${weatherData.daily_units.precipitation_probability_mean}`}
           />
           <ForecastInfoItem
             label={"Humidity"}
-            value={`${data.daily.relative_humidity_2m_mean[currentDayIndex]} ${data.daily_units.relative_humidity_2m_mean}`}
+            value={`${weatherData.daily.relative_humidity_2m_mean[currentDayIndex]} ${weatherData.daily_units.relative_humidity_2m_mean}`}
           />
           <ForecastInfoItem
             label={"Wind"}
-            value={`${data.daily.wind_speed_10m_mean[currentDayIndex]} ${data.daily_units.wind_speed_10m_mean}`}
+            value={`${weatherData.daily.wind_speed_10m_mean[currentDayIndex]} ${weatherData.daily_units.wind_speed_10m_mean}`}
           />
         </div>
         <ul className="week-forecast">
           {[...Array(4)].map((_, i) => (
             <ForecastItem
               key={i}
-              icon={getWeatherDetails(data.daily.weather_code[i]).icon}
+              icon={getWeatherDetails(weatherData.daily.weather_code[i]).icon}
               onClick={() => setCurrentDayIndex(i)}
               isCurrentDate={i === currentDayIndex}
-              day={getDayOfWeek(data.daily.time[i])}
+              day={getDayOfWeek(weatherData.daily.time[i])}
               temperature={Math.round(
-                (data.daily.temperature_2m_min[i] +
-                  data.daily.temperature_2m_max[i]) /
+                (weatherData.daily.temperature_2m_min[i] +
+                  weatherData.daily.temperature_2m_max[i]) /
                   2
               )}
             />
@@ -196,7 +196,7 @@ const App = () => {
             label="Location"
             id="location"
             onChange={(e) => {
-              setLocation(e.target.value);
+              setSearchLocation(e.target.value);
             }}
           />
           {locationData && locationData.length > 0 && (
