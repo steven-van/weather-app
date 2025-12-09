@@ -10,12 +10,25 @@ body {
   margin: 0;
   font-family: "Montserrat", sans-serif;
   color: white;
-
   display: flex;
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
   background-color: #343d4b;
+}
+
+button {
+  background-color: unset;
+  border: unset;
+  color: inherit;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
 .container {
@@ -115,8 +128,7 @@ body {
           font-weight: bold;
         }
 
-        &:hover,
-        &.active {
+        &:hover {
           background-color: #ffffff;
           border-radius: 10px;
           color: #000000;
@@ -196,7 +208,6 @@ body {
 
 .location-form {
   display: flex;
-  column-gap: 20px;
   flex-direction: column;
 }
 
@@ -222,6 +233,28 @@ body {
   padding-bottom: 10px;
 }
 
+.location-list-container {
+  margin-bottom: 20px;
+  background-color: #3c434d;
+  border-radius: 10px;
+  .location-item {
+    padding: 20px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    width: 100%;
+    align-items: center;
+    &:hover {
+      background-color: #ffffff;
+      border-radius: 10px;
+      color: #000000;
+    }
+    .country-flag {
+      border-radius: 4px;
+    }
+  }
+}
+
 @keyframes rotating {
   from {
     transform: rotate(0deg);
@@ -237,4 +270,10 @@ body {
 
 .error-message {
   color: #f77777;
+}
+
+.active {
+  background-color: #ffffff;
+  border-radius: 10px;
+  color: #000000;
 }
