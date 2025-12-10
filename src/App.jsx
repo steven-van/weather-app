@@ -10,7 +10,7 @@ import InputField from "./components/InputField";
 import { getDayOfWeek, getWeatherDetails, toDateString } from "./utils";
 import { getDataFromLocation } from "./assets/api/apiController";
 import LocationItem from "./components/LocationItem";
-
+import Loading from "./components/Loading";
 const App = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [weatherData, setData] = useState({});
@@ -59,15 +59,7 @@ const App = () => {
   if (loading)
     return (
       <>
-        <div className="loading">
-          <p>Loading</p>
-          <Icon
-            icon="material-symbols:rotate-right"
-            className="loader"
-            width="24"
-            height="24"
-          />
-        </div>
+        <Loading />
         <IconButton
           onClick={openModal}
           icon={"solar:map-point-linear"}
@@ -137,7 +129,9 @@ const App = () => {
           <div className="weather">
             <Icon
               icon={
-                getWeatherDetails(weatherData.daily.weather_code[currentDayIndex]).icon
+                getWeatherDetails(
+                  weatherData.daily.weather_code[currentDayIndex]
+                ).icon
               }
               width="50"
               height="50"
@@ -145,8 +139,9 @@ const App = () => {
             <p className="temperature">{`${weatherData.daily.temperature_2m_min[currentDayIndex]} | ${weatherData.daily.temperature_2m_max[currentDayIndex]} °C`}</p>
             <p className="weather-condition">
               {
-                getWeatherDetails(weatherData.daily.weather_code[currentDayIndex])
-                  .title
+                getWeatherDetails(
+                  weatherData.daily.weather_code[currentDayIndex]
+                ).title
               }
             </p>
           </div>
