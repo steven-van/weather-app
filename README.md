@@ -22,6 +22,7 @@ A modern, responsive weather web application built with **React** that provides 
 - **Open-Meteo API** – Free weather data (no API key required)
 - **Iconify** – Weather and UI icons
 - **Fetch API** – HTTP requests
+- **Vite** – Fast development build tool
 
 ---
 
