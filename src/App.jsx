@@ -10,7 +10,6 @@ import InputField from "./components/InputField";
 import { getDayOfWeek, getWeatherDetails, toDateString } from "./utils";
 import { getDataFromLocation } from "./assets/api/apiController";
 import LocationItem from "./components/LocationItem";
-import Loading from "./components/Loading";
 const App = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [weatherData, setData] = useState({});
@@ -59,13 +58,7 @@ const App = () => {
   if (loading)
     return (
       <>
-        <Loading />
-        <IconButton
-          onClick={openModal}
-          icon={"solar:map-point-linear"}
-          label={"Select location"}
-        />
-        <Modal isOpen={isModalOpen} onClose={closeModal}>
+        <Modal isOpen={true} onClose={closeModal}>
           <div className="location-form">
             <InputField
               label="Location"
@@ -91,6 +84,8 @@ const App = () => {
                 })}
               </ul>
             )}
+
+            {!locationData && searchLocation.length > 0 && <p>No results</p>}
             <IconButton
               icon={"material-symbols:search-rounded"}
               label={"Search"}

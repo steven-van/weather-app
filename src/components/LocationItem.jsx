@@ -1,6 +1,6 @@
 const LocationItem = ({ location, isSelected, onClick }) => {
   const { name, country, country_code } = location;
-  const countryCode = country_code.toLowerCase();
+  const countryCode = country_code?.toLowerCase() ?? "";
 
   return (
     <button
